@@ -43,6 +43,7 @@ sol1 = [sol_space1(1,1),sol_space1(i,2),sol_space1(i,3)];
 sol2 = [sol_space2(1,1),sol_space2(j,2),sol_space2(j,3)];%%both solutions placed
 vector = dualquatmultiply(R1(sol1(3)),dualquatmultiply(R2(sol1(2)),R3(sol1(1))));%%operator is working fine
 chk =1;
+figure
 for i = 0 : 0.01 : 1
     vector = dualquatmultiply(R3((sol2(1) - sol1(1))*0.01),vector);%%first all prismatic motion is enabled
     pos = [sol1(1)*(1-i) + sol2(1)*i,sol1(2:3)];
