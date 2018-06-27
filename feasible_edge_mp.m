@@ -74,7 +74,7 @@ end
 if chk == 1
     for i = 0 : 0.01 : 1
         vector = dualquatmultiply(R1(sol1(3)*(1-i) + sol2(3)*i),dualquatmultiply(R2(sol2(2)),R3(sol2(1))));%%first all prismatic motion is enabled
-        pos = [sol2(1),sol2(1),sol1(3)*(1-i) + sol2(3)*i];
+        pos = [sol2(1),sol2(2),sol1(3)*(1-i) + sol2(3)*i];
         if mainpulator_chk(pos) == -1
            chk = -1;
            break;
@@ -85,6 +85,7 @@ if chk == 1
         %chk feasibility of all arms
     end
 end
+mainpulator_chk(pos)
 if chk == 1
     f = vector(5:7);
 end
