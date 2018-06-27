@@ -1,44 +1,44 @@
+%%dont compile right nnow
 tic;
-clear;close;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('hi');
-global domain ;
-domain = [];
-a = 0;
-b = 100;
-x_domain = (b-a).*rand(100,1) + a;
-y_domain = (b-a).*rand(100,1) + a;
-z_domain = (b-a).*rand(100,1) + a;
-count = zeros(100,1);
-domain = [x_domain y_domain z_domain count];
-x_domain = [];
-y_domain = [];
-z_domain = [];
-count = [];
-figure
-plot3(domain(:,1),domain(:,2),domain(:,3),'.')
-title('Nodes generated before search');
+clear;close all;
+global domain;
+global l1;
+global l2;
+%3 dimensional manipulator
+%coordinates are in radial basis
+%at times of compilation chk space_manip_map is has theta_max z_max
+global a;
+global b;
+global theta_max;
+global theta;
+global min;
+global z_max;
+global z_min;
+a = 100;
+b = 0;
+theta_max = 360;
+theta_min = 0;
+z_max = 0;
+z_min = 10;
+%manipulator arm is at the height of 10 units
+%angle is in degree make sure
+domain = [(a-b)*rand(1000,1)+b, (theta_max-theta_min)*rand(1000,1)+theta_min, (z_max-z_min)*rand(1000,1)+z_min ];
+%plot3(domain(:,1).*cosd(domain(:,2)),domain(:,1).*sind(domain(:,2)),domain(:,3),'.')
+%mapping coordinates to theta1 theta2 d
 global feasible_domain;
-feasible_domain = [];
-global infeasible_domain;
-infeasible_domain = [];
-%%%%
-x = 0;%%defined first point as 0,0  which is feasible and last point as random x_2
-y = 0;
+global infeasible_domain; 
+r = 0;
+theta = 0;
 z = 0;
-x_2 = (b-a).*rand(1,1) + a;
-y_2 = (b-a).*rand(1,1) + a;
-z_2 = (b-a).*rand(1,1) + a;
-figure
-% t = test_plot();
-% plot(t(:,1),t(:,2),t(:,3),'.y')
-% hold on
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- for i =1 : 400
+r_2 = (a-b)*rand(1)+b;
+theta_2 = (theta_max-theta_min)*rand(1000,1)+theta_min;
+z_2 = (z_max-z_min)*rand(1000,1)+z_min;
+for i =1 : 400
+    %didnot write the feasible call by now 
 % while size(domain) ~= size(feasible_domain) - count 
     dist_prev =10000;
     pos = [];
-    while x ~= x_2 && y ~= y_2 && z ~= z_2 %i am here right now
+    while r ~= r_2 && theta ~= theta_2 && z ~= z_2 %i am here right now
         if is_feasible_point([x y z]) == 1 %a dynamic step for moving from feasible previously to x,y !chANGE HERE
             feasible_domain = vertcat(feasible_domain, [x y z]) ;%cell typpe for svm
             dist_i = sqrt((domain(:,1) - x).^2 + (domain(:,2) - y).^2 + (domain(:,3) - z).^2);
@@ -109,25 +109,4 @@ figure
     pause(0.01)
     hold on
 end
-hold off;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-dist = [];
-dist_i = [];
-dist_f = [];
-a = [];
-b = [];
-i = [];
-x = [];
-y = [];
-z = [];
-x_2 = [];
-y_2 = [];
-z_2 = [];
-val = [];
-dist_prev = [];
-count = [];
-sz = [];
-pos = [];
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-domain = [];
-toc
+toc;
