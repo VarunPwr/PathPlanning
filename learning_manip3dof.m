@@ -1,4 +1,6 @@
 %%dont compile right nnow
+%remember feasible_domain_mp is in cartesian space while feasible_edge_mp
+%is in cylinfrical space
 tic;
 clear;close all;
 global domain;
