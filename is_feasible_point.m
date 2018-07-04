@@ -70,6 +70,8 @@ elseif sz ==3
 %     % obstacle 3
     obstacler = [ x(1) + 2 * x(2) - 250 > 0, x(1) + 2 * x(2) - 275 < 0, x(3) > 75, x(3) < 100];
     obstacle = vertcat(obstacle, obstacler);
+    obstacler = [ x(1) - 30 > 0, x(1) - 80 < 0, x(3) > 25, x(3) < 65];
+    obstacle = vertcat(obstacle, obstacler);
     obstacler = [];
     %%%%%%%%%%%%%%% lets begin
     obstacle = obstacle * [1 ;1 ;1 ;1];

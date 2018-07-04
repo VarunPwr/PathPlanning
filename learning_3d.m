@@ -30,9 +30,9 @@ x_2 = (b-a).*rand(1,1) + a;
 y_2 = (b-a).*rand(1,1) + a;
 z_2 = (b-a).*rand(1,1) + a;
 figure
-% t = test_plot();
-% plot(t(:,1),t(:,2),t(:,3),'.y')
-% hold on
+%t = test_plot(3);
+%plot3(t(:,1),t(:,2),t(:,3),'.y')
+%hold on
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  for i =1 : 400
 % while size(domain) ~= size(feasible_domain) - count 
@@ -101,12 +101,12 @@ figure
     x_2 = (b-a).*rand(1,1) + a;
     y_2 = (b-a).*rand(1,1) + a;
     z_2 = (b-a).*rand(1,1) + a;
-    plot3(feasible_domain(:,1),feasible_domain(:,2),feasible_domain(:,3),'.g')
+    plot3(feasible_domain(:,1),feasible_domain(:,2),feasible_domain(:,3),'og')
     if isnan(infeasible_domain) == 0
         hold on
-        plot3(infeasible_domain(:,1),infeasible_domain(:,2),infeasible_domain(:,3),'.r')
+        plot3(infeasible_domain(:,1),infeasible_domain(:,2),infeasible_domain(:,3),'or')
     end
-    pause(0.01)
+    pause(0.1)
     hold on
 end
 hold off;
