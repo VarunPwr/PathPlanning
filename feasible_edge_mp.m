@@ -1,6 +1,13 @@
-function f = feasible_edge_mp(MP)
-            x_initial = MP.initial_pos1;
-            x_final = MP.initial_pos2;
+function f = feasible_edge_mp(MP,x_initial, x_final)
+    narginchk(1,3)
+    if nargin == 1
+            x_initial = MP.initial_pos1
+            x_final = MP.initial_pos2
+    end
+    pos_initial = searchpos(MP,x_initial)
+    pos_final = searchpos(MP,x_final)
+    %%need to change the part below, add feasible_edge
+    if isempty(MP.edge_domain) == 1 || isempty(search_edge(MP,x_initial,x_final)) == 1 
             [theta1,rho1,z1] = cart2pol(x_initial(1),x_initial(2),x_initial(3));
             [theta2,rho2,z2] = cart2pol(x_final(1),x_final(2),x_final(3));
             pos1 = [rho1 theta1 z1];
@@ -96,8 +103,19 @@ function f = feasible_edge_mp(MP)
             end
             end
             if chk == -1
-            f = MP.orientation(5:7);
+            x_finall = MP.orientation(5:7);
+            MP.domain = vertcat(MP.domain,[x_finall 1 0]);
+            MP.domain = vertcat(MP.domain,[x_final -1 0]);
             else
-            f = x_final;
+            x_finall = x_final;
+            MP.domain = vertcat(MP.domain,[x_final 1 0]);
             end
-        end
+            pos_finall = searchpos(MP,x_finall)
+            MP.edge_domain = vertcat(MP.edge_domain,[pos_initial,pos_final,pos_finall])
+            f = x_finall;
+    else
+       pos = search_edge(MP,x_initial,x_final);
+       pos_final = MP.edge_domain(pos,3);
+       f = MP.domain(pos_final,1:3); 
+    end
+end

@@ -41,7 +41,7 @@ for i =1 : 50
                 MP.initial_pos1 = feasible_edge_mp(MP);
                 break;
             else
-                MP.initial_pos2 = MP.domain(pos,1:3);
+                MP.initial_pos2 = MP.domain(pos,1:3)
                 MP.initial_pos1 = feasible_edge_mp(MP);
                 MP.domain(pos,5) = 1;
                 dist_prev = dist_f(pos);
@@ -54,7 +54,7 @@ for i =1 : 50
         %x_final = [50*rand(1,2) -10*rand(1)];
     end
     MP.domain(:,5) = 0;
-    MP.domain = vertcat(MP.domain, [MP.initial_pos1 1 0]);
+%     MP.domain = vertcat(MP.domain, [MP.initial_pos1 1 0]);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

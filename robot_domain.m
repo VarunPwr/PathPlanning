@@ -1,28 +1,31 @@
-classdef manipulator_domain < handle   
+classdef robot_domain < handle   
   properties
       domain;
-      orientation;
       initial_pos1;
       initial_pos2;
       edge_domain;
-  end    
+      orientation;
+  end
   methods
-        function plot3d(obj)
+%         function plot3d(obj)
+%           point = obj.domain;
+%           figure
+%           plot3(point(:,1), point(:,2), point(:,3),'.');
+%         end
+        function plot2d(obj)
           point = obj.domain;
           figure
-          plot3(point(:,1), point(:,2), point(:,3),'.');
+          plot(point(:,1), point(:,2),'.');
         end
         function IRsensor(obj)
-            if length(obj.orientation) == 7
-                lorientation = obj.orientation(5:7);
-            end
+            lorientation = obj.orientation;
             sz = size(obj.domain);
-            dist = sqrt((obj.domain(:,1) - lorientation(1)).^2 + (obj.domain(:,2) - lorientation(2)).^2 + (obj.domain(:,3) - lorientation(3)).^2)  ;
+            dist = sqrt((obj.domain(:,1) - lorientation(1)).^2 + (obj.domain(:,2) - lorientation(2)).^2 ) ;
             for i = 1 : sz(1)
-                if feasible_domain_mp([obj.domain(i,1) obj.domain(i,2) obj.domain(i,3)]) == -1 && dist(i) <= 1
+                if is_feasible_point([obj.domain(i,1) obj.domain(i,2)],MP) == 0  && dist(i) <= 1
                 %above condition dist_i < 0.3 is the IR bound for the
                 %robot
-                obj.domain(i,4) = -1;
+                obj.domain(i,3) = -1;
                 %     elseif dist_i(count) > 0.3
                 end
             end

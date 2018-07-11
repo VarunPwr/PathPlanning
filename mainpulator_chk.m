@@ -25,7 +25,7 @@ joint3 = joint3(5:7);
 
 
 for i = 0 : 0.01 : 1
-    if feasible_domain_mp(joint1*i) && feasible_domain_mp(joint2*i +joint1) && feasible_domain_mp(joint3*i +joint2 + joint1)
+    if feasible_domain_mp(joint1*i) == 1 && feasible_domain_mp(joint2*i +joint1) == 1 && feasible_domain_mp(joint3*i +joint2 + joint1) == 1
         continue;
     else
         f = -1;

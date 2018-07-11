@@ -98,7 +98,7 @@ hold on
         hold on
         plot(infeasible_domain(:,1),infeasible_domain(:,2),'or')
     end
-    pause(0.5)
+    pause(0.005)
     hold on
  end
  hold off;

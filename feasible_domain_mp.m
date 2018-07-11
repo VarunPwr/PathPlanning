@@ -14,7 +14,7 @@ function f = feasible_domain_mp(pos)
     %%%%%%%%%%%%%%% lets begin
     obstacle = obstacle * [1 ;1 ;1 ;1];
     if sum(obstacle == 4 ) > 0
-        f = 0;
+        f = -1;
     end
 %presence of obstacle given by infrared sensor
 end
