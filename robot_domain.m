@@ -1,10 +1,12 @@
 classdef robot_domain < handle   
   properties
       domain;
-      initial_pos1;
-      initial_pos2;
+      cost;
+      current_pos;
+%       initial_pos2;
       edge_domain;
-      orientation;
+      obstacle;
+%       orientation;
   end
   methods
 %         function plot3d(obj)
@@ -13,22 +15,26 @@ classdef robot_domain < handle
 %           plot3(point(:,1), point(:,2), point(:,3),'.');
 %         end
         function plot2d(obj)
+          
           point = obj.domain;
           figure
           plot(point(:,1), point(:,2),'.');
         end
-        function IRsensor(obj)
-            lorientation = obj.orientation;
-            sz = size(obj.domain);
-            dist = sqrt((obj.domain(:,1) - lorientation(1)).^2 + (obj.domain(:,2) - lorientation(2)).^2 ) ;
-            for i = 1 : sz(1)
-                if is_feasible_point([obj.domain(i,1) obj.domain(i,2)],MP) == 0  && dist(i) <= 1
+        function f =IRsensor(obj)
+            indx = [];
+            curr_pos = obj.current_pos;
+            dist = sqrt((obj.domain(:,1) - curr_pos(1)).^2 + (obj.domain(:,2) - curr_pos(2)).^2);
+            for i = 1 : length(obj.domain)
+                if is_feasible_point([obj.domain(i,1) obj.domain(i,2)],obj) ==0  && dist(i) < 15
                 %above condition dist_i < 0.3 is the IR bound for the
                 %robot
-                obj.domain(i,3) = -1;
+                    obj.domain(i,3) = 0;
+                elseif is_feasible_point([obj.domain(i,1) obj.domain(i,2)],obj) == 1  && dist(i) < 15
+                    indx = vertcat(indx,i);
                 %     elseif dist_i(count) > 0.3
                 end
             end
+            f = indx;
         end    
 %         function f = feasible_edge_mp(obj)
 %             x_initial = obj.initial_pos1;

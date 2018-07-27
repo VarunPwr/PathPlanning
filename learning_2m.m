@@ -8,11 +8,14 @@ x_domain = (b-a).*rand(300,1) + a;
 y_domain = (b-a).*rand(300,1) + a;
 label = ones(300,1);
 count = zeros(300,1);
+repeat = zeros(300,1);
 robot = robot_domain;
-robot.domain = [x_domain y_domain label count];
-x_domain = [];
-y_domain = [];
-count = [];
+% repeat tells me if the point is every achieved in learning
+robot.domain = [x_domain y_domain label count repeat];
+clear x_domain y_domain label count;
+% x_domain = [];
+% y_domain = [];
+% count = [];
 figure
 plot(robot.domain(:,1),robot.domain(:,2),'.')
 title('Nodes generated before search');
@@ -30,7 +33,7 @@ y_2 = (b-a).*rand(1,1) + a;
 % plot(t(:,1),t(:,2),'.y')
 % hold on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- for i =1 : 5000
+%  for i =1 : 5000
 % while size(domain) ~= size(feasible_domain) - count 
     dist_prev =10000;
     pos = [];
@@ -41,10 +44,12 @@ y_2 = (b-a).*rand(1,1) + a;
             indy = find(robot.domain(:,2) == y);
             ind_pos = intersect(indx,indy);
             if isempty(ind_pos) == 1
-                robot.domain = vertcat(robot.domain,[x y 1 0]);
+                robot.domain = vertcat(robot.domain,[x y 1 0 1]);
                 ind_pos = length(robot.domain);
             else
                 robot.domain(ind_pos,3) = 1;
+                robot.domain(ind_pos,4) = 1;
+                robot.domain(ind_pos,5) = 1;
             end
             clear indx indy;
             dist_i = sqrt((robot.domain(:,1) - x).^2 + (robot.domain(:,2) - y).^2);
@@ -104,10 +109,12 @@ y_2 = (b-a).*rand(1,1) + a;
             indy = find(robot.domain(:,2) == y);
             ind_pos = intersect(indx,indy);
             if isempty(ind_pos) == 1
-                robot.domain = vertcat(robot.domain,[x y 0 0]);
+                robot.domain = vertcat(robot.domain,[x y 0 1 1]);
                 ind_pos = length(robot.domain);
             else
                 robot.domain(ind_pos,3) = 0;
+                robot.domain(ind_pos,4) = 1;
+                robot.domain(ind_pos,5) = 1;
                 
             end
             t = is_feasible_edge(robot.domain(ind_pos,1:2),[x y],robot);%% I am here
@@ -127,24 +134,24 @@ y_2 = (b-a).*rand(1,1) + a;
 %     end
 %     pause(0.005)
 %     hold on
- end
+%  end
 %  hold off;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-dist = [];
-dist_i = [];
-dist_f = [];
-a = [];
-b = [];
-i = [];
-x = [];
-y = [];
-x_2 = [];
-y_2 = [];
-val = [];
-dist_prev = [];
-count = [];
-sz = [];
-pos = [];
+% dist = [];
+% dist_i = [];
+% dist_f = [];
+% a = [];
+% b = [];
+% i = [];
+% x = [];
+% y = [];
+% x_2 = [];
+% y_2 = [];
+% val = [];
+% dist_prev = [];
+% count = [];
+% sz = [];
+% pos = [];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 domain = [];
 % domain = vertcat(feasible_domain,infeasible_domain);

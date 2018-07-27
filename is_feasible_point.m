@@ -9,7 +9,7 @@ else
     ind = intersect(indx,indy);
     
 end
-if isempty(ind) == 1
+if (isempty(ind) == 1) || (robot.domain(ind,5) == 0)
     sz = length(x);
     if sz == 2
         valc_1 = (x(1)-50).^2 + (x(2)-70).^2 - 100 ;
