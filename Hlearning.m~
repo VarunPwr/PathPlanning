@@ -89,7 +89,7 @@ robot.edge_domain(:,3) = 1000000;
 est = 0;
 tic
 length_prev = 0;
-while length(find(robot.edge_domain(:,3) == 0)) ~= 0 
+while length(find(robot.edge_domain(:,3) == 1000000)) ~= 0 
 % for i = 1 :10
 int_nodes = random_nodes(2, robot);
 start_node = int_nodes(1);
@@ -119,7 +119,13 @@ open = expand(current_node, robot.edge_domain);
 hdomain = returnh(open,end_node,robot);%returns the distance betweeen nodes
 cdomain = givecost(current_node, open, robot);
 %total pursuit : doesn't stop for obstacle
-store_in_cost(robot, open, hdomain + cdomain); %not until the motion
+fdomain = hdomain + cdomain;
+indx = find(fdomain(:) == inf);
+if isempty(indx) == 0
+    open(indx) = [];
+    fdomain(indx) = [];
+end
+store_in_cost(robot, open, fdomain); %not until the motion
 next_node = move_forward(robot, open, current_node);
 if next_node == 0
     break;
@@ -141,7 +147,7 @@ est =est +1;
 end
 robot.cost(:) = inf;
 robot.domain(path(:), 4) = 0;
-length_curr = length(find(robot.edge_domain(:,3) ~= 0));
+length_curr = length(find(robot.edge_domain(:,3) ~= 1000000))
 X = abs(length_curr);
 T = toc;
 plot(T, X, 'or')
@@ -251,13 +257,14 @@ function f = givecost(current_node, open, robot)
 distance = [];
 for i = 1 : length(open)
     pos = search_edge(open(i),current_node, robot);
-    if robot.edge_domain(pos,3) == 1000000
-        distance = vertcat(distance, sqrt((robot.domain(open(i),1) - robot.domain(current_node,1)).^2 + (robot.domain(open(i),2) - robot.domain(current_node,2)).^2));
-    else
-%         dist(i) = sqrt((robot.domain(open(i),1) - robot.domain(current_node,1)).^2 + (robot.domain(open(i),2) - robot.domain(current_node,2)).^2);
-        distance = vertcat(distance, robot.edge_domain(pos,3));
-    end
-    if robot.domain(open(i),4) == 1 
+    if robot.domain(open(i),4) == 0
+        if robot.edge_domain(pos,3) == 1000000
+            distance = vertcat(distance, sqrt((robot.domain(open(i),1) - robot.domain(current_node,1)).^2 + (robot.domain(open(i),2) - robot.domain(current_node,2)).^2));
+        else
+    %         dist(i) = sqrt((robot.domain(open(i),1) - robot.domain(current_node,1)).^2 + (robot.domain(open(i),2) - robot.domain(current_node,2)).^2);
+            distance = vertcat(distance, robot.edge_domain(pos,3));
+        end
+    else 
         distance = vertcat(distance, inf);
     end
 end
@@ -321,12 +328,17 @@ if  isempty(open) == 0
         next_node = open(pos);
         robot.edge_domain(edge_pos,3) = dist;
     else
-        next_node = nearest(open, robot);
-        robot.cost(open(pos)) = inf;
         robot.edge_domain(edge_pos,3) = inf;
+        current_pos = robot.current_pos;
+        next_node = nearest(open, robot);        
+        robot.cost(open(pos)) = inf;
         if next_node == current_node
             open(pos) = [];
             next_node = move_forward(robot, open, current_node);
+        elseif next_node ~= 0
+            robot.domain = vertcat(robot.domain, [current_pos 1 1 1]);
+            robot.edge_domain = vertcat(robot.edge_domain,[current_node length(robot.domain) distance(current_node, length(robot.domain, robot))] );
+            robot.edge_domain = vertcat(robot.edge_domain,[next_node length(robot.domain) distance(next_node, length(robot.domain, robot))] );
         end
     end
     f  = next_node;
@@ -373,3 +385,5 @@ else
     f = open(pos);
 end
 end
+
+function f = distance(node1, node2 , robot)

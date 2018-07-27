@@ -275,8 +275,8 @@ function store_in_cost(robot, open, total_cost)
 for i = 1 : length(open)
     if total_cost(i) < robot.cost(open(i))
         robot.cost(open(i)) = total_cost(i);
-    elseif robot.domain(open(i),4) == 1
-        robot.cost(open(i)) = inf;
+%     elseif robot.domain(open(i),4) == 1
+%         robot.cost(open(i)) = inf;
     end
 end
 end
@@ -326,14 +326,21 @@ if  isempty(open) == 0
     edge_pos = search_edge(open(pos),current_node, robot);
     if is_feasible_edge(current_node, open(pos), robot) == 0
         next_node = open(pos);
-        robot.edge_domain(edge_pos,3) = dist;
+        if robot.edge_domain(edge_pos,3) == 1000000 
+            robot.edge_domain(edge_pos,3) = dist;
+        end
     else
-        next_node = nearest(open, robot);
+        robot.edge_domain(edge_pos,:) = [];
+        current_pos = robot.current_pos;
+        next_node = nearest(open, robot);        
         robot.cost(open(pos)) = inf;
-        robot.edge_domain(edge_pos,3) = inf;
+        open(pos) = [];
         if next_node == current_node
-            open(pos) = [];
             next_node = move_forward(robot, open, current_node);
+        elseif next_node ~= 0
+            robot.domain = vertcat(robot.domain, [current_pos 1 1 1]);
+            robot.edge_domain = vertcat(robot.edge_domain,[current_node length(robot.domain) distance(current_node, length(robot.domain), robot)] );
+            robot.edge_domain = vertcat(robot.edge_domain,[next_node length(robot.domain) distance(next_node, length(robot.domain), robot)] );
         end
     end
     f  = next_node;
@@ -379,4 +386,8 @@ if isempty(open) == 1
 else
     f = open(pos);
 end
+end
+
+function f = distance(node1, node2 , robot)
+f = sqrt((robot.domain(node1,1) - robot.domain(node2,1)).^2 + (robot.domain(node1,2) - robot.domain(node2,2)).^2);
 end
